@@ -13,6 +13,7 @@ class Track extends Model
     use HasFactory;
 
     protected $fillable = [
+        'album_id',
         'name',
         'href',
         'duration_ms',

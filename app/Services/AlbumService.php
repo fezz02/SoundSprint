@@ -18,26 +18,23 @@ class AlbumService {
             'released_at' => $albumItem->release_date,
         ]);
 
-        $imgs = [];
         foreach($albumItem->images as $img){
-            $imgs[] = Image::create([
-                'imageable-_ds'
+            $album->images()->create([
                 'url' => $img->url,
                 'height' => $img->height,
                 'width' => $img->width
             ]);
         }
 
-        $album->images()->sync($imgs);
-
-        $artists = [];
+        //$album->images()->sync($imgs);7
         foreach($albumItem->artists as $art){
-            $artists[] = Artist::create([
-
+            $album->artists()->create([
+                'spotify_artist_id' => $art->id,
+                'name' => $art->name,
+                'href' => $art->href,
+                'spotify_href' => $art->external_urls->spotify
             ]);
         }
-
-        $album->images()->sync($artists);
 
         return $album;
     }

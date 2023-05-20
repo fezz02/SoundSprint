@@ -18,7 +18,12 @@ class Image extends Model
         'width'
     ];
     
-    protected $hidden = [];
+    protected $hidden = [
+        'imageable_type',
+        'imageable_id',
+        'created_at',
+        'updated_at',
+    ];
     
     protected $guarded = [];
 

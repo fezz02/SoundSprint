@@ -19,7 +19,12 @@ class Artist extends Model
         'spotify_href'
     ];
     
-    protected $hidden = [];
+    protected $hidden = [
+        'artable_type',
+        'artable_id',
+        'created_at',
+        'updated_at'
+    ];
     
     protected $guarded = [];
 

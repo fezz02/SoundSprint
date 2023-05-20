@@ -71,7 +71,7 @@ class GameController extends Controller {
         $playlistId = $this->getPlaylistIdFromUrl($playlistUrl);
 
         $playlist = $api->getPlaylistTracks($playlistId, ['limit' => 4]);
-        dd($playlist->tracks->items[0]->track->album);
+        //dd($playlist->tracks->items[0]->track);
 
         //$songs = collect($playlist->tracks->items)->filter(fn($item) => $item->track->preview_url);
 
@@ -83,7 +83,14 @@ class GameController extends Controller {
             'playlist' => $plist
         ]);
 
-        $lobby->load(['playlist', 'playlist.tracks']);
+        $lobby->load([
+            'playlist',
+            'playlist.tracks',
+            'playlist.tracks.artists',
+            'playlist.tracks.album',
+            'playlist.tracks.album.images',
+            'playlist.tracks.album.artists'
+    ]);
 
         //dd($lobby);
 
