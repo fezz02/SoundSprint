@@ -9,6 +9,11 @@ use SpotifyWebAPI\Session;
 use App\Models\Lobby;
 use App\Models\Track;
 
+use App\Services\LobbyService;
+use App\Services\PlaylistService;
+
+use App\Http\Requests\JoinLobbyRequest;
+
 class GameController extends Controller {
 
     public function getPlaylistSongs() {
@@ -39,7 +44,7 @@ class GameController extends Controller {
         foreach($randomIds as $n){
             $pps[] = $playlist->tracks->items[$n]->track;
         }
-        dd($pps);
+        //dd($pps);
         return abort(404);
     }
 
@@ -66,57 +71,43 @@ class GameController extends Controller {
         $playlistId = $this->getPlaylistIdFromUrl($playlistUrl);
 
         $playlist = $api->getPlaylistTracks($playlistId, ['limit' => 4]);
+        dd($playlist->tracks->items[0]->track->album);
 
-        dd($playlist);
+        //$songs = collect($playlist->tracks->items)->filter(fn($item) => $item->track->preview_url);
 
-        $songs = collect($playlist->tracks->items)->filter(fn($item) => $item->track->preview_url);
 
-        $lobby = Lobby::create([
-            
+        //dd($playlist, gettype($playlist));
+        $plist = (new PlaylistService())->create($playlist);
+        
+        $lobby = (new LobbyService())->create([
+            'playlist' => $plist
         ]);
-        $songs->each(function($song) use ($lobby) {
-            Track::create([
-                'lobby_id' => $lobby->id,
-                'track' => $song
-            ]);
-        });
+
+        $lobby->load(['playlist', 'playlist.tracks']);
+
+        //dd($lobby);
 
         
-        /*
-        $tracks = \App\Models\Track::where('lobby_id', $lobby->id)
-            ->get()
-            ->random(4)
-            ->map(function ($track){
-                dd($track->track['track']['preview_url']);
-                return $track->track['preview_url'];
-            });
-        */
-        //dd($tracks);
-        
-
-        $songs = $songs->random(4);
-
-        //event(new \App\Events\newSongEvent($lobby));
-        //event(new \App\Events\MyEvent('gattooo'));
         // Crea l'handler che invierà l'evento ogni 15 secondi
         dispatch(new \App\Jobs\SongJob($lobby, 15));
 
+        return response()
+            ->redirectToRoute('join', ['lobby_code' => $lobby->code]);
+    }
+
+    public function join(JoinLobbyRequest $request, string $lobbyCode)
+    {
+        $lobby = Lobby::query()
+            ->with(['users'])
+            ->where('code', $lobbyCode)
+            ->firstOrFail();
+
+        if(!$lobby->users->contains(auth()->user())){
+            $lobby->users()->attach(auth()->user());
+        }
+        
         return Inertia::render('Game', [
-            'songs' => $songs,
             'lobby' => $lobby
         ]);
-    }
-
-    public function prova(){
-        $lobbies = Lobby::all();
-
-        $lobbies->each(function($lobby) {
-            event(new \App\Events\newSongEvent($lobby));
-        });
-    }
-
-    public function gatto()
-    {
-        return Inertia::render('Prova');
     }
 }

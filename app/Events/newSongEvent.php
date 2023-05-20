@@ -40,6 +40,9 @@ class newSongEvent implements ShouldBroadcast
     }
 
     public function broadCastWith(){
+
+        $this->lobby->playlist->tracks->random(4);
+
         //$songs = collect($this->lobby->tracks)->filter(fn($item) => $item->track['preview_url'])->random(4);
         $tracks = \App\Models\Track::where('lobby_id', $this->lobby->id)
             ->get()

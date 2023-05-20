@@ -15,6 +15,13 @@ return new class extends Migration
             $table->id();
             $table->string('code');
             //$table->morphs('playable');
+            $table->unsignedBigInteger('playlist_id')
+                ->nullable();
+            $table->foreign('playlist_id')
+                ->references('id')
+                ->on('playlists')
+                ->nullOnDelete()
+                ->cascadeOnUpdate();
 
             $table->integer('current_players')->default(0);
             $table->integer('max_players')->default(2);

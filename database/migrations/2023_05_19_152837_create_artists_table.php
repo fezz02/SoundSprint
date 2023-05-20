@@ -13,6 +13,12 @@ return new class extends Migration
     {
         Schema::create('artists', function (Blueprint $table) {
             $table->id();
+            $table->morphs('artable');
+
+            $table->string('spotify_artist_id');
+            $table->string('name');
+            $table->string('href');
+            $table->string('spotify_href');
             $table->timestamps();
         });
     }

@@ -32,6 +32,8 @@ Route::get('/dashboard', function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
 
+    Route::get('play/{lobby_code}', [GameController::class, 'join'])->name('join');
+
     Route::get('/play', [GameController::class, 'index'])->name('play');
     Route::get('/playa', [GameController::class, 'getPlaylistSongs'])->name('auth');
     Route::get('/play2', [GameController::class, 'index'])->name('plau');

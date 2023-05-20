@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('albums', function (Blueprint $table) {
             $table->id();
-            $table->string('album_id');
+            $table->string('spotify_album_id');
             $table->string('name');
             $table->string('href');
             $table->string('type');
