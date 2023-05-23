@@ -20,6 +20,7 @@ return new class extends Migration
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
 
+            //$table->string('track_id')
             $table->unsignedBigInteger('track_id')
                 ->nullable();
             $table->foreign('track_id')

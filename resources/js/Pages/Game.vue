@@ -6,7 +6,6 @@ import Card from '@/Components/Game/Card.vue';
 import Countdown from '@/Components/Game/Countdown.vue';
 import Spinner from '@/Components/Loading/Spinner.vue'
 
-import usePresence from '@/Composables/usePresence.js'
 import useSong from '@/Composables/useSong.js'
 
 
@@ -17,7 +16,6 @@ const props = defineProps({
     }
 })
 
-usePresence('presence.lobby.' + props.lobby.id)
 const {
     currentSong,
     secondsRemaining,
@@ -27,6 +25,7 @@ const {
 } = useSong()
 
 onMounted(() => {
+    console.log(props.lobby.id)
     window.Echo.channel('private.lobby.new_song.' + props.lobby.id)
     .subscribed(() => {
         console.log('subscribed')
@@ -46,7 +45,6 @@ computed(() => {
 
 <template>
     <AuthenticatedLayout/>
-
 
     <div>
         <div class="relative grid m-2 place-content-center">

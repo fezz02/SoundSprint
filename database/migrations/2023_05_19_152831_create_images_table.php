@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('url');
             $table->unsignedBigInteger('height')->default(1000);
             $table->unsignedBigInteger('width')->default(1000);
+
+            $table->unique(['url', 'height', 'width']);
             $table->timestamps();
         });
     }

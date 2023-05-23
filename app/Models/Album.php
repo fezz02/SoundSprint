@@ -14,7 +14,7 @@ class Album extends Model
     use HasFactory;
 
     protected $fillable = [
-        'spotify_album_id',
+        'id',
         'name',
         'href',
         'type',

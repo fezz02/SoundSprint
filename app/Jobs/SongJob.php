@@ -34,7 +34,7 @@ class SongJob implements ShouldQueue
 
         $nextRoundInSeconds = now()->addSeconds($this->seconds);
         //sleep(now()->diffInSeconds(now()->addSeconds(15)));
-        event(new \App\Events\newSongEvent($this->lobby, $nextRoundInSeconds));
+        event(new \App\Events\NewSongEvent($this->lobby, $nextRoundInSeconds));
         //dispatch(new \App\Jobs\SongJob($this->lobby));
         dispatch(new \App\Jobs\SongJob($this->lobby, $this->seconds))->delay($nextRoundInSeconds);
     }

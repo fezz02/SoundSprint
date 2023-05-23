@@ -11,7 +11,7 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use App\Models\Lobby;
 
-class newSongEvent implements ShouldBroadcast
+class NewSongEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -40,14 +40,15 @@ class newSongEvent implements ShouldBroadcast
     }
 
     public function broadCastWith(){
-
+        //dd($this->lobby->playlist->tracks);
         $tracks = $this->lobby->playlist->tracks
+        ->filter(fn($track) => $track?->preview_url)
         ->random(4)
         ->map(function ($track){
             return [
                 'track' => [
                     'album' => [
-                        'images' => $track?->album?->images?->first()?->toArray()
+                        'images' => $track?->album?->images?->toArray()
                     ],
                     'name' => $track?->name,
                     'preview_url' => $track?->preview_url,
@@ -55,33 +56,15 @@ class newSongEvent implements ShouldBroadcast
                 ]
             ];
         });
-        //dd($tracks->first()->toArray());
 
-        //$songs = collect($this->lobby->tracks)->filter(fn($item) => $item->track['preview_url'])->random(4);
-        /*
-        $tracks = \App\Models\Track::where('lobby_id', $this->lobby->id)
-            ->get()
-            ->random(4)
-            ->map(function ($track){
-                return [
-                    'track' => [
-                        'album' => [
-                            'images' => $track->track['track']['album']['images']
-                        ],
-                        'name' => $track->track['track']['name'],
-                        'preview_url' => $track->track['track']['preview_url'],
-                        'artists' => $track->track['track']['artists'],
-                    ]
-                ];
-            });
-        */
-        $ritorno = [
+        //dd($tracks->filter(fn($track) => dd($track['track'])));
+
+        //dd($tracks->count());
+        return [
             'seconds' => 15,
             'selected' => $tracks->random(1)->toArray()[0],
             'tracks' => $tracks->toArray()
         ];
-        //dd($ritorno);
-        return $ritorno;
     }
 
     public function broadcastAs(){

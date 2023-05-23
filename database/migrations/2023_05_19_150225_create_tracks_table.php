@@ -14,6 +14,9 @@ return new class extends Migration
         Schema::create('tracks', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('album_id');
+
+            //$table->string('id')->primary();
+            //$table->string('album_id');
             $table->foreign('album_id')
                 ->references('id')
                 ->on('albums')
@@ -26,6 +29,7 @@ return new class extends Migration
             $table->integer('popularity')->default(0);
             $table->string('preview_url')->nullable();
             $table->boolean('explicit')->default(false);
+            
             $table->timestamps();
 
             $table->unique(['name', 'href']);

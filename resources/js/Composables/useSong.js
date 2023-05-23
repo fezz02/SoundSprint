@@ -14,9 +14,11 @@ export default function() {
 
 
   const startRound = (tracks, current, seconds) => {
+      /*
       while(!roundReady){
         console.log('round not ready yet')
       }
+      */
       songs.value = tracks
 
       currentSong.value.src = current.track?.preview_url

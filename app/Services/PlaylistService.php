@@ -7,6 +7,8 @@ use App\Models\Track;
 use App\Models\Artist;
 use App\Enums\Status;
 use App\Enums\Game;
+use App\Models\Album;
+use App\Models\Image;
 
 use App\Services\AlbumService;
 
@@ -22,64 +24,74 @@ class PlaylistService {
             'followers' => $fields->followers->total
         ]);
 
-        //dd($fields);
-        $fillables = array_flip((new Track())->getFillable());
-        $tracks = collect($fields->tracks->items)
-            //->map(fn($item) => (array) $item->track)
-            ->map(function ($item) use ($fillables) {
-                //$fillableTrack = array_intersect_key((array) $item->track, $fillables);
-                //dd($fillableTrack);
-                return $item;
-            });
+        $itemCollection = collect($fields->tracks->items);
 
-        //dd($tracks);
+        $data = $itemCollection->map(function ($item) {
+            $album = $item->track->album;
+            $artists = $item->track->artists;
 
+            $albumData = [
+                'id' => hexdec($album->id),
+                'name' => $album->name,
+                'href' => $album->href,
+                'type' => $album->album_type,
+                'released_at' => $album->release_date
+            ];
 
-        $tracks->each(function($item) use ($fields, $fillables, $playlist) {
-            $fillableTrack = array_intersect_key((array) $item->track, $fillables);
-            $album = (new AlbumService())->create($item->track->album);
-            $fillableTrack = array_merge($fillableTrack, ['album_id' => $album->id]);
-            //dd($fillableTrack);
-            $newTrack = Track::updateOrCreate($fillableTrack);
+            $imagesData = collect($album->images)->map(function ($image) use ($album) {
+                return [
+                    'imageable_id' => hexdec($album->id),
+                    'imageable_type' => 'App\Models\Album',
+                    'url' => $image->url,
+                    'width' => $image->width,
+                    'height' => $image->height
+                ];
+            })->toArray();
 
-            foreach($item->track->artists as $artist){
-                $newTrack->artists()->create([
-                    'spotify_artist_id' => $artist->id,
+            $artistsData = collect($artists)->map(function ($artist) use ($item) {
+                return [
+                    'id' => hexdec($artist->id),
+                    'artable_id' => hexdec($item->track->id),
+                    'artable_type' => 'App\Models\Track',
                     'name' => $artist->name,
                     'href' => $artist->href,
                     'spotify_href' => $artist->external_urls->spotify
-                ]);
-            }
-            
-            //$newTrack->album()->sync($album);
-            $playlist->tracks()->attach($newTrack);
+                ];
+            })->toArray();
+
+            $trackData = [
+                'id' => hexdec($item->track->id),
+                'album_id' => hexdec($album->id),
+                'name' => $item->track->name,
+                'href' => $item->track->href,
+                'duration_ms' => $item->track->duration_ms,
+                'popularity' => $item->track->popularity,
+                'preview_url' => $item->track->preview_url,
+                'explicit' => $item->track->explicit
+            ];
+
+            return [
+                'albums' => $albumData,
+                'images' => $imagesData,
+                'artists' => $artistsData,
+                'tracks' => $trackData,
+            ];
         });
-        /*
-        Track::upsert($tracks->toArray(), ['name','href'],
-        [
-            'name',
-            'href',
-            'duration_ms',
-            'popularity',
-            'preview_url',
-            'explicit'
-        ]);
-        */
 
-        //$trackRefs = $tracks->pluck('href')->toArray();
+        $albums = $data->pluck('albums')->toArray();
+        $images = $data->pluck('images')->flatten(1)->toArray();
+        $artists = $data->pluck('artists')->flatten(1)->toArray();
+        $tracks = $data->pluck('tracks')->toArray();
 
-        //dd($trackRefs);
-        //dd($createdTracks);
+        Album::upsert($albums, ['name', 'href'], ['name', 'href']);
+        Image::upsert($images, ['url', 'width', 'height'], ['url', 'width', 'height']);
+        Artist::upsert($artists, ['name', 'href'], ['artable_id', 'spotify_artist_id', 'name', 'href']);
+        Track::upsert($tracks, ['name', 'href'], ['name', 'album_id', 'href', 'duration_ms', 'popularity', 'preview_url', 'explicit']);
 
-        /*
-        $createdTracks = Track::query()
-            ->whereIn('href', $trackRefs)
-            ->get();
+        $trackIds = collect($tracks)->pluck('id')->toArray();
 
-
-        $playlist->tracks()->sync($createdTracks);
-        */
-
+        $playlist->tracks()->sync($trackIds);
+        
         return $playlist;
     }
 }

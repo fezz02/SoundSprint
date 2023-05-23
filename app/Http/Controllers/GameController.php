@@ -67,7 +67,7 @@ class GameController extends Controller {
         $api = new SpotifyWebAPI();
         $api->setAccessToken($accessToken);
 
-        $playlistUrl = 'https://open.spotify.com/playlist/4JGT5MnoT1vQIfk7Skdvwl?si=aa4635bfe64b47fe';
+        $playlistUrl = 'https://open.spotify.com/playlist/33PyRULhtc4SRrUE1wbbmp?si=295abf2b61634194';
         $playlistId = $this->getPlaylistIdFromUrl($playlistUrl);
 
         $playlist = $api->getPlaylistTracks($playlistId, ['limit' => 4]);
@@ -90,9 +90,7 @@ class GameController extends Controller {
             'playlist.tracks.album',
             'playlist.tracks.album.images',
             'playlist.tracks.album.artists'
-    ]);
-
-        //dd($lobby);
+        ]);
 
         
         // Crea l'handler che invierà l'evento ogni 15 secondi
@@ -104,14 +102,18 @@ class GameController extends Controller {
 
     public function join(JoinLobbyRequest $request, string $lobbyCode)
     {
+
         $lobby = Lobby::query()
             ->with(['users'])
             ->where('code', $lobbyCode)
-            ->firstOrFail();
+            ->first();
 
-        if(!$lobby->users->contains(auth()->user())){
+        
+            /*
+        if(!$lobby->users->contains(auth()->user())) {
             $lobby->users()->attach(auth()->user());
         }
+        */
         
         return Inertia::render('Game', [
             'lobby' => $lobby
