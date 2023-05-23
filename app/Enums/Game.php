@@ -2,5 +2,5 @@
 namespace App\Enums;
 
 enum Game: int {
-    case MILL = 0;
+    case GUESS_SONG = 0;
 }

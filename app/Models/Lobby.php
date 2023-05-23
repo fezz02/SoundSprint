@@ -9,12 +9,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Enums\Game;
 use App\Enums\Status;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Lobby extends Model
 {
     use HasFactory;
 
     protected $fillable = [
+        'code',
+        'playlist_id',
         'playable_id',
         'playable_type',
         'current_players',
@@ -75,5 +78,10 @@ class Lobby extends Model
     public function tracks(): HasMany
     {
         return $this->hasMany(Track::class);
+    }
+
+    public function playlist(): BelongsTo
+    {
+        return $this->belongsTo(Playlist::class);
     }
 }

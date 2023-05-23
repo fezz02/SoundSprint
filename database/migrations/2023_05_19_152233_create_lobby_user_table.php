@@ -13,6 +13,25 @@ return new class extends Migration
     {
         Schema::create('lobby_user', function (Blueprint $table) {
             $table->id();
+
+            $table->unsignedBigInteger('user_id')
+                ->nullable();
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('users')
+                ->nullOnDelete()
+                ->cascadeOnUpdate();
+
+            $table->unsignedBigInteger('lobby_id')
+                ->nullable();
+            $table->foreign('lobby_id')
+                ->references('id')
+                ->on('lobbies')
+                ->nullOnDelete()
+                ->cascadeOnUpdate();
+                
+            $table->unsignedBigInteger('track_id')
+                ->nullable();
             $table->foreign('track_id')
                 ->references('id')
                 ->on('tracks')

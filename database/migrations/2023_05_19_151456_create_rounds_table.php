@@ -11,13 +11,17 @@ return new class extends Migration
     {
         Schema::create('rounds', function (Blueprint $table) {
             $table->unsignedBigInteger('id');
-            $table->unsignedBigInteger('lobby_id');
 
+            $table->unsignedBigInteger('lobby_id');
+                //->nullable();
             $table->foreign('lobby_id')
                 ->references('id')
                 ->on('lobbies')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
+
+            $table->unsignedBigInteger('track_id')
+                ->nullable();
             $table->foreign('track_id')
                 ->references('id')
                 ->on('tracks')

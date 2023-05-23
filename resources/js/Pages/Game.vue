@@ -32,6 +32,7 @@ onMounted(() => {
         console.log('subscribed')
     })
     .listen('.lobby.new_song', (data) => {
+        console.log('new song')
         console.log(data)
         startRound(data?.tracks, data?.selected, data?.seconds)
     });

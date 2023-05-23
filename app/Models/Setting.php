@@ -8,4 +8,15 @@ use Illuminate\Database\Eloquent\Model;
 class Setting extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'key',
+        'default'
+    ];
+    
+    protected $hidden = [];
+    
+    protected $guarded = [];
+    
+    // Definisci le relazioni qui
 }

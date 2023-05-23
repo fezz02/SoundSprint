@@ -40,7 +40,25 @@ class newSongEvent implements ShouldBroadcast
     }
 
     public function broadCastWith(){
+
+        $tracks = $this->lobby->playlist->tracks
+        ->random(4)
+        ->map(function ($track){
+            return [
+                'track' => [
+                    'album' => [
+                        'images' => $track?->album?->images?->first()?->toArray()
+                    ],
+                    'name' => $track?->name,
+                    'preview_url' => $track?->preview_url,
+                    'artists' => $track?->artists?->toArray(),
+                ]
+            ];
+        });
+        //dd($tracks->first()->toArray());
+
         //$songs = collect($this->lobby->tracks)->filter(fn($item) => $item->track['preview_url'])->random(4);
+        /*
         $tracks = \App\Models\Track::where('lobby_id', $this->lobby->id)
             ->get()
             ->random(4)
@@ -56,12 +74,14 @@ class newSongEvent implements ShouldBroadcast
                     ]
                 ];
             });
-
-        return [
+        */
+        $ritorno = [
             'seconds' => 15,
             'selected' => $tracks->random(1)->toArray()[0],
             'tracks' => $tracks->toArray()
         ];
+        //dd($ritorno);
+        return $ritorno;
     }
 
     public function broadcastAs(){
