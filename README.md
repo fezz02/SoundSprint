@@ -7,7 +7,7 @@ The project is open source and everyone in github can freely help the developing
 ## Developers
 - [Federico Palcich](https://www.linkedin.com/in/federico-palcich/) | [website](https://www.fezz.it)
 
-- **[Install project]**
+##[Install project]
 - Clone main repository `git clone https://github.com/fezz02/SoundSprint/tree/main`
 
 - Duplicate .env.example into a new file .env and change the settings as you like: note that you have to create your own pusher account in order to play the game on your local machine
