@@ -7,9 +7,27 @@ The project is open source and everyone in github can freely help the developing
 ## Developers
 - [Federico Palcich](https://www.linkedin.com/in/federico-palcich/) | [website](https://www.fezz.it)
 
-## How to play?
+- **[Install project]**
+- Clone main repository
+`git clone https://github.com/fezz02/SoundSprint/tree/main`
 
--- Clone main repository
-```js
-    git clone https://github.com/fezz02/SoundSprint/tree/main 
-```
+- Duplicate .env.example into a new file .env and change the settings as you like
+`
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=spotify_game
+DB_USERNAME=root
+DB_PASSWORD=
+
+BROADCAST_DRIVER=pusher
+QUEUE_CONNECTION=database
+
+PUSHER_APP_ID=
+PUSHER_APP_KEY=
+PUSHER_APP_SECRET=
+PUSHER_HOST=
+PUSHER_PORT=443
+PUSHER_SCHEME=https
+PUSHER_APP_CLUSTER=mt1
+`
