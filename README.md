@@ -8,10 +8,9 @@ The project is open source and everyone in github can freely help the developing
 - [Federico Palcich](https://www.linkedin.com/in/federico-palcich/) | [website](https://www.fezz.it)
 
 - **[Install project]**
-- Clone main repository
-`git clone https://github.com/fezz02/SoundSprint/tree/main`
+- Clone main repository `git clone https://github.com/fezz02/SoundSprint/tree/main`
 
-- Duplicate .env.example into a new file .env and change the settings as you like
+- Duplicate .env.example into a new file .env and change the settings as you like: note that you have to create your own pusher account in order to play the game on your local machine
 ```
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
@@ -31,3 +30,11 @@ PUSHER_PORT=443
 PUSHER_SCHEME=https
 PUSHER_APP_CLUSTER=mt1
 ```
+
+- Install NPM dependencies `npm install`
+- Install Composer packages `composer install`
+- Run the vite development server `npm run dev`
+- Run the laravel backend server `php artisan serve`
+- Run the queue worker `php artisan queue:work`
+
+... more to come...
