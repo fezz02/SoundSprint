@@ -33,12 +33,9 @@ Route::get('/dashboard', function () {
 Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('play/{lobby_code}', [GameController::class, 'join'])->name('join');
+    Route::post('play/{lobby_code}', [GameController::class, 'selectSong'])->name('selectSong');
 
     Route::get('/play', [GameController::class, 'index'])->name('play');
-    Route::get('/playa', [GameController::class, 'getPlaylistSongs'])->name('auth');
-    Route::get('/play2', [GameController::class, 'index'])->name('plau');
-    Route::get('/play22', [GameController::class, 'prova'])->name('plau22');
-    Route::get('/gatto', [GameController::class, 'gatto'])->name('gatto');
 
     Route::group(['prefix' => 'profile', 'as' => 'profile.'], function () {
         Route::get('/', [ProfileController::class, 'edit'])->name('edit');

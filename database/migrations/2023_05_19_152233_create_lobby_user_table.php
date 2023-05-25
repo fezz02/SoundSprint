@@ -14,6 +14,14 @@ return new class extends Migration
         Schema::create('lobby_user', function (Blueprint $table) {
             $table->id();
 
+            $table->unsignedBigInteger('lobby_id')
+                ->nullable();
+            $table->foreign('lobby_id')
+                ->references('id')
+                ->on('lobbies')
+                ->nullOnDelete()
+                ->cascadeOnUpdate();
+
             $table->unsignedBigInteger('user_id')
                 ->nullable();
             $table->foreign('user_id')
@@ -22,25 +30,7 @@ return new class extends Migration
                 ->nullOnDelete()
                 ->cascadeOnUpdate();
 
-            $table->unsignedBigInteger('lobby_id')
-                ->nullable();
-            $table->foreign('lobby_id')
-                ->references('id')
-                ->on('lobbies')
-                ->nullOnDelete()
-                ->cascadeOnUpdate();
-                
-            //$table->string('track_id')
-            $table->unsignedBigInteger('track_id')
-                ->nullable();
-            $table->foreign('track_id')
-                ->references('id')
-                ->on('tracks')
-                ->nullOnDelete()
-                ->cascadeOnUpdate();
-
-            $table->boolean('guessed')->default(false);
-            $table->timestamps();
+            $table->integer('score')->default(0);
         });
     }
 

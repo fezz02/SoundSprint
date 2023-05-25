@@ -1,4 +1,6 @@
 <script setup>
+import { router } from '@inertiajs/vue3'
+
 import { watch, computed, ref, onMounted } from 'vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import Answer from '@/Components/Game/Answer.vue';
@@ -13,6 +15,10 @@ const props = defineProps({
     lobby: {
         type: Object,
         required: true
+    },
+    auth: {
+        type: Object,
+        required: true
     }
 })
 
@@ -24,15 +30,20 @@ const {
     startRound
 } = useSong()
 
+const selected = ref({})
+
 onMounted(() => {
     console.log(props.lobby.id)
-    window.Echo.channel('private.lobby.new_song.' + props.lobby.id)
+    window.Echo.channel('private.lobby.' + props.lobby.id)
     .subscribed(() => {
         console.log('subscribed')
     })
-    .listen('.lobby.new_song', (data) => {
-        console.log('new song')
+    .listen('.new_song', (data) => {
+        selected.value = {};
         console.log(data)
+        let guessed = data?.last_round?.users.find(user => user.id === props.auth.user.id)
+
+        console.log((guessed) ? 'you guessed' : 'did not guess')
         startRound(data?.tracks, data?.selected, data?.seconds)
     });
 })
@@ -40,6 +51,13 @@ onMounted(() => {
 computed(() => {
     
 })
+
+const selectSong = (song) => {
+    selected.value = song
+    router.post(route('selectSong', {lobby_code: props.lobby.code}), {
+        track_id: selected.value?.id,
+    });
+}
 
 </script>
 
@@ -54,7 +72,7 @@ computed(() => {
                 </div>
                 <Countdown :seconds="secondsRemaining" :max-seconds="maxSeconds"/>
                 <ul v-if="secondsRemaining > 0" class="grid grid-cols-2 gap-4 border-2 border-base-200">
-                    <Answer v-for="song in songs" :url="song?.track?.album?.images[0]?.url">
+                    <Answer v-for="song in songs" :key="song?.id" :url="song?.track?.album?.images[0]?.url" :selected="selected?.id === song?.id" @click="selectSong(song)">
                         <template #title>{{ song?.track?.name }}</template>
                         <template #artist>
                             {{ song?.track?.artists.map(artist => artist.name).join(', ') }}
@@ -63,10 +81,8 @@ computed(() => {
                 </ul>
                 <ul v-else class="grid grid-cols-2 gap-4 border-2 border-base-200">
                     <Answer v-for="song in 4">
-                        <template #title>Loading...</template>
-                        <template #artist>
-                            Please wait...
-                        </template>
+                        <template #title>{{ $t('game.loading.title') }}</template>
+                        <template #artist>{{ $t('game.loading.text') }}</template>
                     </Answer>    
                 </ul>
             </div>

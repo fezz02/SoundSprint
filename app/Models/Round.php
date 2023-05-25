@@ -5,15 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Round extends Model
 {
     use HasFactory;
-
-    protected $primaryKey = [
-        'id',
-        'lobby_id'
-    ];
 
     protected $fillable = [
         'lobby_id',
@@ -31,6 +27,16 @@ class Round extends Model
 
     public function track(): BelongsTo
     {
-        return $this->belongsTo(Track::class)->withDefault();
+        return $this->belongsTo(Track::class);
+    }
+
+    public function tracks(): BelongsToMany
+    {
+        return $this->belongsToMany(Track::class);
+    }
+
+    public function users(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class)->withPivot(['guessed', 'track_id']);
     }
 }

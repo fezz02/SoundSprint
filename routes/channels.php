@@ -17,7 +17,7 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });
 
-Broadcast::channel('private.lobby.new_song.{lobby}', function(App\Models\User $user, App\Models\Lobby $lobby){
+Broadcast::channel('private.lobby.{lobby}', function(App\Models\User $user, App\Models\Lobby $lobby){
     return true;
 });
 
