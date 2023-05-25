@@ -1,7 +1,15 @@
 # SoundSprint
 
-## Description
-SoundSprint is an engaging music game that challenges you to guess the names of random music tracks while listening to them. What makes SoundSprint unique is its direct integration with Spotify, allowing you to use your own personal playlists. You can simultaneously challenge an unlimited number of friends and customize the game with different modes. The score is calculated based on the number of players who fail to guess the song, with a bonus score if you manage to win the game. You can steal points from your opponents and earn a bonus of 5 points. You can also customize challenges and select playlists directly from your Spotify account or as a guest. SoundSprint offers social features such as leaderboards, most played playlists, and a history of challenges with your friends. What truly sets SoundSprint apart is the wide range of challenge options, including the ability to select random playlists based on genres. Additionally, the gameplay experience is further enhanced by a unique visual design that syncs with the music, creating a vibrant disco-like atmosphere. Have fun with SoundSprint and put your music knowledge to the test in a unique and engaging way
+## Project Idea (TODO)
+SoundSprint is an engaging music game that challenges you to guess the names of random music tracks while listening to them. What makes SoundSprint unique is its direct integration with Spotify, allowing you to use your own personal playlists. You can simultaneously challenge an unlimited number of friends and customize the game with different modes. The score is calculated based on the number of players who fail to guess the song, with a bonus score if you manage to win the game. You can steal points from your opponents and earn a bonus of 5 points. You can also customize challenges and select playlists directly from your Spotify account or as a guest. SoundSprint offers social features such as leaderboards, most played playlists, and a history of challenges with your friends. What truly sets SoundSprint apart is the wide range of challenge options, including the ability to select random playlists based on genres. Additionally, the gameplay experience is further enhanced by a unique visual design that syncs with the music, creating a vibrant disco-like atmosphere. Have fun with SoundSprint and put your music knowledge to the test in a unique and engaging way.
+The project is open source and everyone in github can freely help the developing process of the game.
 
 ## Developers
 - [Federico Palcich](https://www.linkedin.com/in/federico-palcich/) | [website](https://www.fezz.it)
+
+## How to play?
+
+-- Clone main repository
+```js
+    git clone https://github.com/fezz02/SoundSprint/tree/main 
+```
