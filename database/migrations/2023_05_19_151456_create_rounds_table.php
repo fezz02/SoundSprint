@@ -10,7 +10,11 @@ return new class extends Migration
     public function up()
     {
         Schema::create('rounds', function (Blueprint $table) {
-            $table->unsignedBigInteger('id');
+            //$table->unsignedBigInteger('id');
+            //$table->id();
+            //$table->unsignedBigInteger('id')->autoIncrement();
+            //$table->increments('id');
+            $table->id();
 
             $table->unsignedBigInteger('lobby_id');
                 //->nullable();
@@ -20,16 +24,17 @@ return new class extends Migration
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
 
-            //$table->string('track_id')
-            $table->unsignedBigInteger('track_id')
-                ->nullable();
+            $table->unsignedBigInteger('track_id');
+
             $table->foreign('track_id')
                 ->references('id')
                 ->on('tracks')
-                ->nullOnDelete()
+                ->cascadeOnDelete()
                 ->cascadeOnUpdate();
 
-            $table->primary(['id', 'lobby_id']);
+            $table->unsignedInteger('round_no');
+
+            $table->timestamps();
         });
 
         $this->createCustomAutoIncrementTrigger();
@@ -48,8 +53,8 @@ return new class extends Migration
             CREATE TRIGGER round_id_auto_increment BEFORE INSERT ON rounds
             FOR EACH ROW
             BEGIN
-                SET NEW.id = (
-                    SELECT COALESCE(MAX(id), 0) + 1
+                SET NEW.round_no = (
+                    SELECT COALESCE(MAX(round_no), 0) + 1
                     FROM rounds
                     WHERE lobby_id = NEW.lobby_id
                 );

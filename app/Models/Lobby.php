@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Enums\Game;
 use App\Enums\Status;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Lobby extends Model
 {
@@ -75,13 +76,23 @@ class Lobby extends Model
         return $this->belongsToMany(User::class);
     }
 
-    public function tracks(): HasMany
+    public function tracks(): BelongsToMany
     {
-        return $this->hasMany(Track::class);
+        return $this->belongsToMany(Track::class);
     }
 
     public function playlist(): BelongsTo
     {
         return $this->belongsTo(Playlist::class);
+    }
+
+    public function rounds(): HasMany
+    {
+        return $this->hasMany(Round::class);
+    }
+
+    public function round(): HasOne
+    {
+        return $this->hasOne(Round::class)->ofMany('round_no', 'max');
     }
 }

@@ -10,6 +10,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use App\Models\Lobby;
+use App\Models\Round;
 
 class NewSongEvent implements ShouldBroadcast
 {
@@ -35,7 +36,7 @@ class NewSongEvent implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('lobby.new_song.'.$this->lobby->id),
+            new PrivateChannel('lobby.'.$this->lobby->id),
         ];
     }
 
@@ -46,6 +47,7 @@ class NewSongEvent implements ShouldBroadcast
         ->random(4)
         ->map(function ($track){
             return [
+                'id' => $track?->id,
                 'track' => [
                     'album' => [
                         'images' => $track?->album?->images?->toArray()
@@ -60,14 +62,33 @@ class NewSongEvent implements ShouldBroadcast
         //dd($tracks->filter(fn($track) => dd($track['track'])));
 
         //dd($tracks->count());
+
+        $randomTrack = $tracks->random(1);
+
+        $this->lobby->load([
+            'round',
+            'round.users'
+        ]);
+
+        $lastRound = $this->lobby->round;
+
+        $round = Round::create([
+            'lobby_id' => $this->lobby->id,
+            'track_id' => $randomTrack[0]['id']
+        ]);
+
+        $round->tracks()->sync($tracks->map(fn($tr) => $tr['id']));
+
+
         return [
+            'last_round' => $lastRound,
             'seconds' => 15,
-            'selected' => $tracks->random(1)->toArray()[0],
+            'selected' => $randomTrack->toArray()[0],
             'tracks' => $tracks->toArray()
         ];
     }
 
     public function broadcastAs(){
-        return 'lobby.new_song';
+        return 'new_song';
     }
 }

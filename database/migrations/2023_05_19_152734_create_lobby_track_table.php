@@ -13,7 +13,20 @@ return new class extends Migration
     {
         Schema::create('lobby_track', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+
+            $table->unsignedBigInteger('lobby_id');
+            $table->foreign('lobby_id')
+                ->references('id')
+                ->on('lobbies')
+                ->cascadeOnDelete()
+                ->cascadeOnUpdate();
+
+            $table->unsignedBigInteger('track_id');
+            $table->foreign('track_id')
+                ->references('id')
+                ->on('tracks')
+                ->cascadeOnDelete()
+                ->cascadeOnUpdate();
         });
     }
 

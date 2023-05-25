@@ -13,7 +13,22 @@ return new class extends Migration
     {
         Schema::create('round_track', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+
+            $table->unsignedBigInteger('round_id');
+
+            $table->foreign('round_id')
+                ->references('id')
+                ->on('rounds')
+                ->cascadeOnDelete()
+                ->cascadeOnUpdate();
+
+                $table->unsignedBigInteger('track_id');
+
+            $table->foreign('track_id')
+                ->references('id')
+                ->on('tracks')
+                ->cascadeOnDelete()
+                ->cascadeOnUpdate();
         });
     }
 

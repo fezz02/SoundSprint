@@ -13,6 +13,7 @@ use App\Services\LobbyService;
 use App\Services\PlaylistService;
 
 use App\Http\Requests\JoinLobbyRequest;
+use App\Http\Requests\SelectSongRequest;
 
 class GameController extends Controller {
 
@@ -118,5 +119,25 @@ class GameController extends Controller {
         return Inertia::render('Game', [
             'lobby' => $lobby
         ]);
+    }
+
+    public function selectSong(SelectSongRequest $request, string $lobbyCode)
+    {
+        $lobby = Lobby::query()
+            ->with(['users', 'round', 'round.users'])
+            ->where('code', $lobbyCode)
+            ->first();
+        
+        $request = $request->validated();
+
+        $trackId = $request['track_id'];
+        $userId = auth()->user()->id;
+
+        $guessed = $trackId === $lobby->round->track_id;
+
+        if($lobby->round->users->contains(auth()->user())){
+            $lobby->round->users()->detach($userId);
+        }
+        $lobby->round->users()->attach($userId, ['track_id' => $trackId, 'guessed' => $guessed]);
     }
 }
