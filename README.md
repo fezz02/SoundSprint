@@ -12,7 +12,7 @@ The project is open source and everyone in github can freely help the developing
 `git clone https://github.com/fezz02/SoundSprint/tree/main`
 
 - Duplicate .env.example into a new file .env and change the settings as you like
-`
+```
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
@@ -30,4 +30,4 @@ PUSHER_HOST=
 PUSHER_PORT=443
 PUSHER_SCHEME=https
 PUSHER_APP_CLUSTER=mt1
-`
+```
