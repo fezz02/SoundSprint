@@ -5,7 +5,7 @@ SoundSprint is an engaging music game that challenges you to guess the names of 
 The project is open source and everyone in github can freely help the developing process of the game.
 
 ## Developers
-- [Federico Palcich](https://www.linkedin.com/in/federico-palcich/) | [website](https://www.fezz.it)
+- [Federico Palcich](https://www.linkedin.com/in/federico-palcich/) | [website](https://www.fezz.it) | [linkedin](https://www.linkedin.com/in/federico-palcich/)
 
 ## Install project
 - Clone main repository `git clone https://github.com/fezz02/SoundSprint/tree/main`
