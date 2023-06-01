@@ -27,6 +27,16 @@ return new class extends Migration
             $table->integer('max_players')->default(2);
             $table->unsignedTinyInteger('status')->default(0);
             $table->unsignedTinyInteger('game')->default(0);
+            
+            $table->enum('privacy', [
+                'public',
+                'private',
+                'friends_only',
+                'invite_only'
+            ]);
+            $table->string('password')->nullable();
+
+            $table->datetime('next_round_at')->nullable();
             $table->datetime('timeout_at')->nullable();
             $table->datetime('started_at')->nullable();
             $table->datetime('finished_at')->nullable();

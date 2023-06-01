@@ -17,6 +17,7 @@
         "vue": "^3.2.41"
     },
     "dependencies": {
+        "@vueuse/core": "^10.1.2",
         "daisyui": "^2.51.6",
         "laravel-echo": "^1.15.1",
         "laravel-vue-i18n": "^2.4.3",

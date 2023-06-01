@@ -12,20 +12,20 @@ use Illuminate\Queue\SerializesModels;
 use App\Models\Lobby;
 use App\Models\Round;
 
-class NewSongEvent implements ShouldBroadcast
+class NewTrackEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     private Lobby $lobby;
-    private \Illuminate\Support\Carbon $nextSeconds;
+    private int $secondsToNextTrack;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(Lobby $lobby, \Illuminate\Support\Carbon $nextSeconds)
+    public function __construct(Lobby $lobby, int $secondsToNextTrack)
     {
         $this->lobby = $lobby;
-        $this->nextSeconds = $nextSeconds;
+        $this->secondsToNextTrack = $secondsToNextTrack;
     }
     
     /**
@@ -41,7 +41,6 @@ class NewSongEvent implements ShouldBroadcast
     }
 
     public function broadCastWith(){
-        //dd($this->lobby->playlist->tracks);
         $tracks = $this->lobby->playlist->tracks
         ->filter(fn($track) => $track?->preview_url)
         ->random(4)
@@ -59,10 +58,6 @@ class NewSongEvent implements ShouldBroadcast
             ];
         });
 
-        //dd($tracks->filter(fn($track) => dd($track['track'])));
-
-        //dd($tracks->count());
-
         $randomTrack = $tracks->random(1);
 
         $this->lobby->load([
@@ -79,16 +74,15 @@ class NewSongEvent implements ShouldBroadcast
 
         $round->tracks()->sync($tracks->map(fn($tr) => $tr['id']));
 
-
         return [
             'last_round' => $lastRound,
-            'seconds' => 15,
+            'seconds' => $this->secondsToNextTrack,
             'selected' => $randomTrack->toArray()[0],
             'tracks' => $tracks->toArray()
         ];
     }
 
     public function broadcastAs(){
-        return 'new_song';
+        return 'new_track';
     }
 }

@@ -6,7 +6,11 @@ import NavLink from '@/Components/Nav/NavLink.vue';
 const routes = [
     {
         label: 'Play',
-        name: 'play',
+        name: 'play.index',
+    },
+    {
+        label: 'mmk',
+        name: 'mmk.index'
     }
 ]
 

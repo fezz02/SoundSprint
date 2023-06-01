@@ -8,13 +8,16 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Enums\Game;
-use App\Enums\Status;
+use App\Enums\PrivacyType;
+use App\Enums\StatusType;
+use App\Traits\Privacy;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Lobby extends Model
 {
     use HasFactory;
+    use Privacy;
 
     protected $fillable = [
         'code',
@@ -25,23 +28,28 @@ class Lobby extends Model
         'max_players',
         'status',
         'game',
+        'privacy',
+        'password',
+        'next_round_at',
         'timeout_at',
         'started_at',
         'finished_at',
-        ''
     ];
 
     protected $casts = [
-        'status' => Status::class,
+        'status' => StatusType::class,
         'game' => Game::class,
+        'privacy' => PrivacyType::class,
         'timeout_at' => 'datetime',
         'started_at' => 'datetime',
         'finished_at' => 'datetime',
     ];
 
     protected $hidden = [
+        'playlist_id',
         'playable_type',
         'playable_id',
+        'password'
     ];
 
     protected static function boot(){

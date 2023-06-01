@@ -38,7 +38,7 @@ onMounted(() => {
     .subscribed(() => {
         console.log('subscribed')
     })
-    .listen('.new_song', (data) => {
+    .listen('.new_track', (data) => {
         selected.value = {};
         console.log(data)
         let guessed = data?.last_round?.users.find(user => user.id === props.auth.user.id)
@@ -52,9 +52,9 @@ computed(() => {
     
 })
 
-const selectSong = (song) => {
+const guessTrack = (song) => {
     selected.value = song
-    router.post(route('selectSong', {lobby_code: props.lobby.code}), {
+    router.post(route('play.guessTrack', {lobby_code: props.lobby.code}), {
         track_id: selected.value?.id,
     });
 }
@@ -72,7 +72,7 @@ const selectSong = (song) => {
                 </div>
                 <Countdown :seconds="secondsRemaining" :max-seconds="maxSeconds"/>
                 <ul v-if="secondsRemaining > 0" class="grid grid-cols-2 gap-4 border-2 border-base-200">
-                    <Answer v-for="song in songs" :key="song?.id" :url="song?.track?.album?.images[0]?.url" :selected="selected?.id === song?.id" @click="selectSong(song)">
+                    <Answer v-for="song in songs" :key="song?.id" :url="song?.track?.album?.images[0]?.url" :selected="selected?.id === song?.id" @click="guessTrack(song)">
                         <template #title>{{ song?.track?.name }}</template>
                         <template #artist>
                             {{ song?.track?.artists.map(artist => artist.name).join(', ') }}

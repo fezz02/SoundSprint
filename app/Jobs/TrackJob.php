@@ -10,7 +10,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use App\Models\Lobby;
 
-class SongJob implements ShouldQueue
+class TrackJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -32,10 +32,15 @@ class SongJob implements ShouldQueue
     {
         //$changeTime = now()->clone()->addSeconds(15);
 
-        $nextRoundInSeconds = now()->addSeconds($this->seconds);
-        //sleep(now()->diffInSeconds(now()->addSeconds(15)));
-        event(new \App\Events\NewSongEvent($this->lobby, $nextRoundInSeconds));
-        //dispatch(new \App\Jobs\SongJob($this->lobby));
-        dispatch(new \App\Jobs\SongJob($this->lobby, $this->seconds))->delay($nextRoundInSeconds);
+        //$nextRoundInSeconds = now()->addSeconds($this->seconds);
+        event(new \App\Events\NewTrackEvent($this->lobby, $this->seconds));
+
+        /*
+        $this->lobby->update([
+            'next_round_at' => now()->addSeconds($this->seconds) + 1
+        ]);
+        */
+
+        dispatch(new \App\Jobs\TrackJob($this->lobby, $this->seconds))->delay($this->seconds);
     }
 }

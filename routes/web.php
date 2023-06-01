@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\GameController;
+use App\Http\Controllers\LobbyController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -32,10 +33,18 @@ Route::get('/dashboard', function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
 
-    Route::get('play/{lobby_code}', [GameController::class, 'join'])->name('join');
-    Route::post('play/{lobby_code}', [GameController::class, 'selectSong'])->name('selectSong');
+    Route::group(['prefix' => 'matchmaking', 'as' => 'mmk.'], function () {
+        Route::get('/', [LobbyController::class, 'index'])->name('index');
+        Route::get('create', [LobbyController::class, 'create'])->name('create');
+    });
 
-    Route::get('/play', [GameController::class, 'index'])->name('play');
+    Route::group(['prefix' => 'play', 'as' => 'play.'], function () {
+        Route::get('/', [GameController::class, 'index'])->name('index');
+        Route::get('/{lobby_code}', [GameController::class, 'join'])->name('join');
+        Route::post('/{lobby_code}', [GameController::class, 'guessTrack'])->name('guessTrack');
+    });
+    
+
 
     Route::group(['prefix' => 'profile', 'as' => 'profile.'], function () {
         Route::get('/', [ProfileController::class, 'edit'])->name('edit');
