@@ -5,6 +5,8 @@ namespace App\Services;
 use App\Models\Lobby;
 use App\Enums\StatusType;
 use App\Enums\Game;
+use App\Exceptions\Lobby\NoJoinableLobbyException;
+use App\Models\User;
 
 class LobbyService {
 
@@ -24,8 +26,26 @@ class LobbyService {
             
         ]);
 
-
-
         return $lobby;
+    }
+
+    public function canJoin(Lobby $lobby, User $user): bool
+    {
+
+        if($lobby->isFull()){
+            //throw new LobbyIsFullException();
+        }
+
+        return true;
+    }
+
+    public function getRandomJoinableCode(): string
+    {
+        return Lobby::query()
+            ->inRandomOrder()
+            ->select(['code'])
+            ->limit(1)
+            ->joinable()
+            ->firstOr(fn() => throw new NoJoinableLobbyException);
     }
 }

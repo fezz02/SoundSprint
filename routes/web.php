@@ -40,6 +40,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::group(['prefix' => 'play', 'as' => 'play.'], function () {
         Route::get('/', [GameController::class, 'index'])->name('index');
+        Route::get('/random', [GameController::class, 'joinRandom'])->name('random');
         Route::get('/{lobby_code}', [GameController::class, 'join'])->name('join');
         Route::post('/{lobby_code}', [GameController::class, 'guessTrack'])->name('guessTrack');
     });

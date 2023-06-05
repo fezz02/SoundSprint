@@ -10,14 +10,16 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Enums\Game;
 use App\Enums\PrivacyType;
 use App\Enums\StatusType;
-use App\Traits\Privacy;
+use App\Traits\HasGameStatus;
+use App\Traits\RespectsPrivacy;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Lobby extends Model
 {
     use HasFactory;
-    use Privacy;
+    use RespectsPrivacy;
+    use HasGameStatus;
 
     protected $fillable = [
         'code',
@@ -102,5 +104,23 @@ class Lobby extends Model
     public function round(): HasOne
     {
         return $this->hasOne(Round::class)->ofMany('round_no', 'max');
+    }
+
+    public function isFull(): bool
+    {
+        return ($this->current_players >= $this->max_players);
+    }
+
+    public function isUserAllowed(User $user): bool
+    {
+        return ($this->isPublic() || $this->isUserInvited($user) || $this->containsFriends($user));
+    }
+
+    public function authorize(User $user, string $password): bool
+    {
+        $authorized = ($this->isPrivate() && $this->password === $password);
+
+        $this->users()->attach($user);
+        return $authorized;
     }
 }

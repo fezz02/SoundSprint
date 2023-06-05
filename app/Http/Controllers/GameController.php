@@ -14,6 +14,8 @@ use App\Services\PlaylistService;
 
 use App\Http\Requests\JoinLobbyRequest;
 use App\Http\Requests\GuessTrackRequest;
+use App\Exceptions\GameNotFoundException;
+use App\Exceptions\NoJoinableLobbyException;
 
 class GameController extends Controller {
 
@@ -104,32 +106,33 @@ class GameController extends Controller {
             ]);
     }
 
-    public function join(JoinLobbyRequest $request, string $lobbyCode)
+    public function joinRandom(Request $request, LobbyService $service){
+        $code = $service->getRandomJoinableCode();
+        return response()
+            ->redirectToRoute('play.join', [
+                'lobby_code' => $code
+            ]);
+    }
+
+    public function join(Request $request, Lobby $lobby)
     {
-
-        $lobby = Lobby::query()
-            ->with(['users'])
-            ->where('code', $lobbyCode)
-            ->first();
-
         
-            /*
-        if(!$lobby->users->contains(auth()->user())) {
-            $lobby->users()->attach(auth()->user());
-        }
-        */
-        
+        $lobby->load([
+            'users'
+        ]);
+
         return Inertia::render('Game', [
             'lobby' => $lobby
         ]);
     }
 
-    public function guessTrack(GuessTrackRequest $request, string $lobbyCode)
+    public function guessTrack(GuessTrackRequest $request, Lobby $lobby)
     {
-        $lobby = Lobby::query()
-            ->with(['users', 'round', 'round.users'])
-            ->where('code', $lobbyCode)
-            ->first();
+        $lobby->load([
+            'users',
+            'round',
+            'round.users'
+        ]);
         
         $request = $request->validated();
 

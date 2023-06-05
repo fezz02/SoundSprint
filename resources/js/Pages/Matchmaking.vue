@@ -5,14 +5,21 @@ import { watch, computed, ref, onMounted } from 'vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import Table from '@/Components/Display/Table/Table.vue'
 import Row from '@/Components/Display/Table/Row.vue'
+import Badge from '@/Components/Display/Badge/Badge.vue'
+import Button from '@/Components/Input/Button.vue';
 
 import { useVirtualList } from '@vueuse/core'
+import useMatchmaking from '@/Composables/useMatchmaking';
 
+const { joinLobby, joinRandomLobby } = useMatchmaking()
 
 const props = defineProps({
   lobbies: {
     type: Array,
     required: true
+  },
+  errors: {
+    type: Array,
   }
 })
 
@@ -30,6 +37,12 @@ const { list, containerProps, wrapperProps } = useVirtualList(
     <AuthenticatedLayout/>
     <div class="relative grid m-2 place-content-center">
         <div class="grid gap-4 p-2 rounded-lg bg-neutral">
+            <div class="w-full">
+              
+              <Badge v-for="error in props.errors" type="error" size="lg" class="w-full">
+                  {{ error }}
+              </Badge>
+            </div>
             <div class="grid grid-cols-1 gap-8 p-2 bg-base-200 sm:grid-cols-2 md:grid-cols-3">
                 <div class="form-control">
                     <div class="input-group">
@@ -39,8 +52,8 @@ const { list, containerProps, wrapperProps } = useVirtualList(
                       </button>
                     </div>
                 </div>
-                <button class="btn btn-primary text-primary-content">Join random</button>
-                <button class="btn btn-success text-success-content">Create lobby</button>
+                <Button class="btn-primary text-primary-content"  @click="joinRandomLobby">Join random</Button>
+                <Button class="btn-success text-success-content">Create lobby</Button>
                 <div class="form-control">
                     <label class="cursor-pointer label">
                       <span class="label-text">Friends only</span> 
@@ -62,7 +75,11 @@ const { list, containerProps, wrapperProps } = useVirtualList(
                       <div>{{ item.code }}</div>
                       <div>{{ item.current_players + ' / ' + item.max_players }}</div>
                       <div>{{ item.status }}</div>
-                      <div><button class="btn btn-outline btn-success">Join</button></div>
+                      <div>
+                        <Button class="btn-outline btn-success" @click="joinLobby(item.code)">
+                          Join
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 </div>

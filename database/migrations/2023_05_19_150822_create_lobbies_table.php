@@ -25,7 +25,17 @@ return new class extends Migration
 
             $table->integer('current_players')->default(0);
             $table->integer('max_players')->default(2);
-            $table->unsignedTinyInteger('status')->default(0);
+            //$table->unsignedTinyInteger('status')->default(0);
+            $table->enum('status', [
+                'queue',
+                'starting',
+                'playing',
+                'finished',
+                'error',
+                'cancelled',
+                'timeout'
+            ]);
+            
             $table->unsignedTinyInteger('game')->default(0);
             
             $table->enum('privacy', [
