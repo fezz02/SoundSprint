@@ -76,7 +76,8 @@ const { list, containerProps, wrapperProps } = useVirtualList(
                       <div>{{ item.current_players + ' / ' + item.max_players }}</div>
                       <div>{{ item.status }}</div>
                       <div>
-                        <Button class="btn-outline btn-success" @click="joinLobby(item.code)">
+                        {{ item.joinable }}
+                        <Button :disabled="item.joinable" class="btn-outline btn-success" @click="joinLobby(item.code)">
                           Join
                         </Button>
                       </div>

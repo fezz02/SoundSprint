@@ -8,6 +8,11 @@ use Illuminate\Database\Eloquent\Builder;
 
 trait RespectsPrivacy {
 
+    public function scopePrivacyAuthorized(Builder $query, array $authorizedKeys)
+    {
+        return $query->whereIn('privacy', $authorizedKeys);
+    }
+
     public function scopePrivate(Builder $query)
     {
         return $query->where('privacy', PrivacyType::PRIVATE);

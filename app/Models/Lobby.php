@@ -22,7 +22,6 @@ class Lobby extends Model
     use HasGameStatus;
 
     protected $fillable = [
-        'code',
         'playlist_id',
         'playable_id',
         'playable_type',
@@ -62,7 +61,7 @@ class Lobby extends Model
         });
     }
     
-    public static function generateUniqueCode()
+    private static function generateUniqueCode()
     {
         $generateCode = function(){
             return strtoupper(substr(md5(uniqid()), 0, 6));
@@ -105,6 +104,7 @@ class Lobby extends Model
     {
         return $this->hasOne(Round::class)->ofMany('round_no', 'max');
     }
+
 
     public function isFull(): bool
     {

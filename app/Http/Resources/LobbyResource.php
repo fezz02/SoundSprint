@@ -16,7 +16,8 @@ class LobbyResource extends JsonResource
     public function toArray(Request $request): array
     {
         return array_merge(parent::toArray($request), [
-            'status' => __('game.lobby.status.'.$this->status->value)
+            'status' => __('game.lobby.status.'.$this->status->value),
+            'joinable' => $this->isUserAllowed($request->user()) && $this->isJoinable()
         ]);
     }
 }

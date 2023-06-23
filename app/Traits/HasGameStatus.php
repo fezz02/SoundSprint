@@ -9,10 +9,7 @@ trait HasGameStatus {
 
     public function scopeJoinable(Builder $query)
     {
-        return $query->whereIn('status', [
-            StatusType::QUEUE,
-            StatusType::STARTING
-        ]);
+        return $query->whereIn('status', config('matchmaking.game.connection.join.status'));
     }
 
     public function scopeQueue(Builder $query)
@@ -33,5 +30,9 @@ trait HasGameStatus {
     public function scopeFinished(Builder $query)
     {
         return $query->where('status', StatusType::FINISHED);
+    }
+
+    public function isJoinable(){
+        return in_array($this->status, config('matchmaking.game.connection.join.status'));
     }
 }

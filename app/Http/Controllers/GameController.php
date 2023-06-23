@@ -116,7 +116,6 @@ class GameController extends Controller {
 
     public function join(Request $request, Lobby $lobby)
     {
-        
         $lobby->load([
             'users'
         ]);
